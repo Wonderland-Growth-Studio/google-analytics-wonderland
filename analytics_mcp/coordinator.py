@@ -359,6 +359,7 @@ def create_server(
 
     return Server(
         name="Google Analytics MCP Server",
+        title="Wonderland Google Analytics",
         on_list_tools=list_tools,
         on_call_tool=call_mcp_tool,
     )

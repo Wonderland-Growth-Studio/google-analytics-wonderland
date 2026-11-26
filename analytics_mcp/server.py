@@ -26,6 +26,7 @@ from typing import Sequence
 from urllib.parse import urlparse
 
 import analytics_mcp.coordinator as coordinator
+from analytics_mcp.brand import brand_routes, server_icons
 from analytics_mcp.oauth import GoogleOAuthProvider, build_oauth_components
 import mcp.server
 from mcp.server.lowlevel import NotificationOptions
@@ -198,6 +199,12 @@ def build_http_app(args: argparse.Namespace):
         auth_settings, token_verifier, custom_routes = build_oauth_components(
             oauth_provider
         )
+
+    # The Wonderland icon: public routes always, and the serverInfo entry when
+    # the public URL is known (it must be absolute).
+    custom_routes = list(custom_routes or []) + brand_routes()
+    if explicit_issuer_url:
+        app.icons = server_icons(explicit_issuer_url)
 
     if explicit_issuer_url and args.host in ("127.0.0.1", "localhost", "::1"):
         parsed_issuer = urlparse(explicit_issuer_url)
